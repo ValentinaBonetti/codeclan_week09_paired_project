@@ -7,7 +7,8 @@
     "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server:dev": "nodemon server/server.js",
-    "build": "webpack -w"
+    "build": "webpack -w",
+    "seeds": "mongo < server/db/seeds.js"
   },
   "repository": {
     "type": "git",
