@@ -26,7 +26,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "mongodb": "^3.1.8",
-    "table": "5.1.0"
+    "tableify": "1.1.0"
   },
   "bugs": {
     "url": "https://github.com/ValentinaBonetti/codeclan_week09_paired_project/issues"
