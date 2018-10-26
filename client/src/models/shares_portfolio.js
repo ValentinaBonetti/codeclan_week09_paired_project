@@ -2,6 +2,8 @@ const PubSub = require('../helpers/pub_sub.js');
 const Request = require('../helpers/request.js')
 
 const Shares = function () {
+  this.internalItems = [];
+  this.internalRequest = new Request('/api/shares');
 };
 
   Shares.prototype.getQuoteData = function () {
@@ -47,5 +49,16 @@ console.log(this.chart);
 //   }
 //   return obj;
 
+
+////  INTERNAL API
+Shares.prototype.getInternalSharesData = function () {
+  this.internalRequest
+    .get()
+    .then((listSharesItems) => {
+      this.internalItems = listSharesItems;
+      PubSub.publish('SharesPortfolio:internal-api-list-ready', this.internalItems);
+    })
+    .catch((error) => console.error(error));
+};
 
 module.exports = Shares;

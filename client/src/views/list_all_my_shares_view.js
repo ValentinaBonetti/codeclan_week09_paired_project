@@ -11,15 +11,18 @@ ListAllMySharesView.prototype.bindEvents = function () {
 
   this.tryOutTable();
 
-  // PubSub.subscribe('SharesList:list-ready', (event) => {
-  //   const sharesItems = event.detail;
-  //   this.renderList(sharesItems);
-  // });
+  PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
+    const sharesItems = event.detail;
+    this.renderList(sharesItems);
+  });
 };
 
 ListAllMySharesView.prototype.renderList = function (items) {
   this.emptyList();
-  items.forEach((items) => this.renderItem(item));
+  // select fields that you want to render in table and put in array:
+  items.forEach((item) => this.renderItem(item));
+  // otherwise this one returns everything in db, including _id:
+  this.buildTable(items);
 };
 
 ListAllMySharesView.prototype.emptyList = function () {
@@ -27,13 +30,21 @@ ListAllMySharesView.prototype.emptyList = function () {
 };
 
 ListAllMySharesView.prototype.renderItem = function (item) {
-  const listItemView = new ListView
+  // const listItemView = new ListView
+  console.log(item.name);
+};
+
+ListAllMySharesView.prototype.buildTable = function (items) {
+  var html = tableify(items);
+  var htmlNode = document.createElement('div');
+  htmlNode.innerHTML = html;
+  this.element.appendChild(htmlNode);
 };
 
 ListAllMySharesView.prototype.tryOutTable = function () {
   var html = tableify({
       someArrayOfObjects : [
-          { a : 1, b : 2, c : 3  }
+          { name : 1, b : 2, c : 3  }
           , { a : 2, b : 3, c : 4 }
           , { a : 3, b : 4, c : 5 }
       ]

@@ -6,10 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const list_all_shares = document.querySelector('div#list_all_shares');
   const listAllMySharesView = new ListAllMySharesView(list_all_shares);
-  console.log('type is:',typeof list_all_shares);
   listAllMySharesView.bindEvents();
-
-
 
 
   const shares = new Shares();
@@ -17,4 +14,5 @@ document.addEventListener('DOMContentLoaded', () => {
   shares.getCompanyData();
   shares.getSymbolData();
   shares.getChartData();
+  shares.getInternalSharesData();
 });
