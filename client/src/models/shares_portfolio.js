@@ -7,6 +7,14 @@ const Shares = function () {
   this.internalRequest = new Request('/api/shares');
 };
 
+Shares.prototype.bindEvents = function () {
+  PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
+    const sharesItems = event.detail;
+    const totalCost = this.calculatePortfolioCost(sharesItems);
+    PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
+  });
+};
+
 // Gets symbol data from API for all shares (an array for all shares containing 8,750 hashes with keys - symbol:, name:, etc).  Subscribes for change in share name drop-down and returns selected share name.  Finds share symbol based on selected share name, calls getAPIData and getChartData functions and passes the selected share symbol.
   Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
@@ -36,8 +44,7 @@ const Shares = function () {
 // Individual share data from the API for specific share
   Shares.prototype.getApiData = function (symbol) {
     console.log(symbol);
-    const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);
-    request1.get().then((price) => {
+    const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);    request1.get().then((price) => {
       this.apiData.price = price});
     const request2 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/quote`);
     request2.get().then((quote) => {
@@ -73,7 +80,7 @@ const Shares = function () {
     request6.get().then((logo) => {
       this.apiData.logo = logo.url});
     PubSub.publish('Shares:api-data-ready', this.apiData);
-    console.log(this.apiData);
+    // console.log(this.apiData);
 };
 
 // Price data for 1 year for specific share
@@ -82,7 +89,7 @@ const Shares = function () {
   request.get().then((chart) => {
     this.chart = chart
     PubSub.publish('Shares:chart1y-data-ready', chart)
-    console.log(chart);
+    // console.log(chart);
   });
 };
 
@@ -95,6 +102,14 @@ Shares.prototype.getInternalSharesData = function () {
       PubSub.publish('SharesPortfolio:internal-api-list-ready', this.internalItems);
     })
     .catch((error) => console.error(error));
+};
+
+Shares.prototype.calculatePortfolioCost = function (sharesItems) {
+    var total_cost = 0;
+    sharesItems.forEach((item) => {
+      total_cost += item.n_of_shares*item.cost_per_share;
+    });
+    return total_cost;
 };
 
 module.exports = Shares;
