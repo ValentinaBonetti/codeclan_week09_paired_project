@@ -10,8 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const shares = new Shares();
-  shares.getQuoteData();
-  shares.getCompanyData();
+  shares.getApiData();
   shares.getSymbolData();
   shares.getChartData();
   shares.getInternalSharesData();
