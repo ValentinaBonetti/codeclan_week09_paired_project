@@ -1,5 +1,4 @@
 const PubSub = require('../helpers/pub_sub.js');
-
 const tableify = require('tableify');
 
 const ListAllMySharesView = function (listElement) {

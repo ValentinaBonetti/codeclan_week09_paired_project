@@ -7,6 +7,15 @@ const Shares = function () {
   this.internalRequest = new Request('/api/shares');
 };
 
+Shares.prototype.bindEvents = function () {
+  PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
+    const sharesItems = event.detail;
+    const totalCost = this.calculatePortfolioCost(sharesItems);
+    PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
+});
+};
+
+
   Shares.prototype.getApiData = function () {
     const request1 = new Request("https://api.iextrading.com/1.0/stock/aapl/price");
     request1.get().then((price) => {
@@ -76,5 +85,14 @@ Shares.prototype.getInternalSharesData = function () {
     })
     .catch((error) => console.error(error));
 };
+
+Shares.prototype.calculatePortfolioCost = function (sharesItems) {
+    var total_cost = 0;
+    sharesItems.forEach((item) => {
+      total_cost += item.n_of_shares*item.cost_per_share;
+    });
+    return total_cost;
+};
+
 
 module.exports = Shares;
