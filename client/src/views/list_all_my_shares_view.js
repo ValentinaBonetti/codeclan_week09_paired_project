@@ -33,7 +33,7 @@ ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray) {
     // add what you want to show in table view:
     var refinedItem = {};
     refinedItem.name = localItem.name;
-    refinedItem.symbol = localItem.symbol;
+    refinedItem.symbol = localItem.symbol.toUpperCase();
     refinedItem.shares = localItem.n_of_shares;
     refinedItem.currency = localItem.currency;
     refinedItem.purchase = localItem.cost_per_share;

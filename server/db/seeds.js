@@ -3,43 +3,48 @@ db.dropDatabase();
 
 db.shares.insertMany([
   {
-    symbol: 'aab',
-    name: 'American Adventures',
+    symbol: 'A',
+    name: 'Agilent Technologies Inc.',
     n_of_shares: 10,
     cost_per_share: 100,
     date_of_purchase: '2018-10-09',
     currency: 'USD'
   },
   {
-    symbol: 'acb',
-    name: 'Abracadabra',
+    symbol: 'AAL',
+    name: 'American Airlines Group Inc.',
     n_of_shares: 1,
     cost_per_share: 120,
-    date_of_purchase: '2016-05-08',
+    date_of_purchase: '2018-05-08',
     currency: 'USD'
   },
   {
-    symbol: 'apple',
-    name: 'Apple',
+    symbol: 'AAPL',
+    name: 'Apple Inc.',
     n_of_shares: 20,
     cost_per_share: 240,
-    date_of_purchase: '2017-08-13',
+    date_of_purchase: '2018-08-13',
     currency: 'USD'
   },
   {
-    symbol: 'linuxf',
-    name: 'The Linux Foundation',
+    symbol: 'GHL',
+    name: 'Greenhill & Co. Inc.',
     n_of_shares: 200,
     cost_per_share: 21.345,
-    date_of_purchase: '2015-01-02',
+    date_of_purchase: '2018-01-02',
     currency: 'USD'
   },
   {
-    symbol: 'mics',
-    name: 'Microsoft',
+    symbol: 'TLF',
+    name: 'Tandy Leather Factory Inc.',
     n_of_shares: 1,
     cost_per_share: 10.6,
-    date_of_purchase: '1999-01-19',
+    date_of_purchase: '2018-01-19',
     currency: 'USD'
   }
+  // {
+  //   name: 'Cash',
+  //   n_of_shares: 1,
+  //   cost_per_share: 89800.40
+  // }
 ]);

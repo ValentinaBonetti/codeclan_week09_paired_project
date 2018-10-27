@@ -11,6 +11,7 @@ Shares.prototype.bindEvents = function () {
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
     const totalCost = this.calculatePortfolioCost(sharesItems);
+    const livePrices = this.livePortfolioPrices(sharesItems);
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
   });
 };
@@ -27,10 +28,9 @@ Shares.prototype.bindEvents = function () {
 
     const selectedShare = symbols.find(selected => selected.name === shareName);
     selectedSymbol = selectedShare.symbol;
-    this.selectedSymbol = selectedSymbol
-    this.getApiData(this.selectedSymbol);
-    this.getChartData(this.selectedSymbol);
-    console.log(this.selectedSymbol);
+    this.getApiData(selectedSymbol);
+    this.getChartData(selectedSymbol);
+    // console.log(this.selectedSymbol);
     });
   });
 };
@@ -41,9 +41,9 @@ Shares.prototype.bindEvents = function () {
   this.nameList = nameList;
   };
 
-// Individual share data from the API for specific share
+// Individual share data from the API for a specific share
   Shares.prototype.getApiData = function (symbol) {
-    console.log(symbol);
+    // console.log(symbol);
     const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);    request1.get().then((price) => {
       this.apiData.price = price});
     const request2 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/quote`);
@@ -80,16 +80,15 @@ Shares.prototype.bindEvents = function () {
     request6.get().then((logo) => {
       this.apiData.logo = logo.url});
     PubSub.publish('Shares:api-data-ready', this.apiData);
-    // console.log(this.apiData);
+    console.log(this.apiData);
 };
 
 // Price data for 1 year for specific share
   Shares.prototype.getChartData = function (symbol) {
   const request = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`);
   request.get().then((chart) => {
-    this.chart = chart
     PubSub.publish('Shares:chart1y-data-ready', chart)
-    // console.log(chart);
+    console.log(chart);
   });
 };
 
@@ -111,5 +110,17 @@ Shares.prototype.calculatePortfolioCost = function (sharesItems) {
     });
     return total_cost;
 };
+
+// Live price data for shares in Internal API portfolio
+Shares.prototype.livePortfolioPrices = function (sharesItems) {
+  portfolio = "";
+  sharesItems.forEach((item) => {
+    portfolio += item.symbol+",";
+  });
+  const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${portfolio}&types=price`)
+  request.get().then((price) => {
+    console.log(price);
+     return(price) });
+   };
 
 module.exports = Shares;
