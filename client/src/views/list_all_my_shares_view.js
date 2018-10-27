@@ -8,39 +8,57 @@ const ListAllMySharesView = function (listElement) {
 
 
 ListAllMySharesView.prototype.bindEvents = function () {
-
-  this.tryOutTable();
-
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
     this.renderList(sharesItems);
   });
 };
 
-ListAllMySharesView.prototype.renderList = function (items) {
+ListAllMySharesView.prototype.renderList = function (sharesItems) {
   this.emptyList();
+  console.log('shares items before function',sharesItems);
   // select fields that you want to render in table and put in array:
-  items.forEach((item) => this.renderItem(item));
+  const sharesRefinedItems = this.selectTableFields(sharesItems);
+  // items.forEach((item) => this.renderItem(item));
   // otherwise this one returns everything in db, including _id:
-  this.buildTable(items);
+  this.buildTable(sharesRefinedItems);
 };
 
 ListAllMySharesView.prototype.emptyList = function () {
   this.element.innerHTML = '';
 };
 
-ListAllMySharesView.prototype.renderItem = function (item) {
-  // const listItemView = new ListView
-  console.log(item.name);
+ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray) {
+  const allRefinedItems = new Array();
+  sharesItemsArray.forEach(function(localItem) {
+    // add what you want to show in table view:
+    var refinedItem = {};
+    refinedItem.name = localItem.name;
+    refinedItem.symbol = localItem.symbol;
+    refinedItem.shares = localItem.n_of_shares;
+    refinedItem.currency = localItem.currency;
+    refinedItem.purchase = localItem.cost_per_share;
+    refinedItem.cost = localItem.cost_per_share*localItem.n_of_shares;
+    allRefinedItems.push(refinedItem);
+  });
+  return allRefinedItems;
 };
+// ListAllMySharesView.prototype.renderItem = function (item) {
+//   // const listItemView = new ListView
+//   console.log(item.name);
+// };
 
 ListAllMySharesView.prototype.buildTable = function (items) {
   var html = tableify(items);
   var htmlNode = document.createElement('div');
+  htmlNode.id = 'internal-api-table-container';
   htmlNode.innerHTML = html;
   this.element.appendChild(htmlNode);
 };
 
+
+// This tryOutTable function is just to test tableify functionality.
+// Use it in bindEvents to try out; delete it at the end of development.
 ListAllMySharesView.prototype.tryOutTable = function () {
   var html = tableify({
       someArrayOfObjects : [
@@ -63,13 +81,11 @@ ListAllMySharesView.prototype.tryOutTable = function () {
           ]
       }
   });
-
-
   var htmlNode = document.createElement('div');
+  // the following line is needed because otherwise html is just a string
+  // and appendChild does not work.
   htmlNode.innerHTML = html;
   this.element.appendChild(htmlNode);
-
   };
-
 
 module.exports = ListAllMySharesView;

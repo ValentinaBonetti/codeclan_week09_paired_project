@@ -45,7 +45,7 @@ const Shares = function () {
     request6.get().then((logo) => {
       this.apiData.logo = logo.url});
     PubSub.publish('Shares:api-data-ready', this.apiData);
-    console.log(this.apiData);
+    // console.log(this.apiData);
 };
 
   Shares.prototype.getChartData = function () {
@@ -53,7 +53,7 @@ const Shares = function () {
   request.get().then((chart) => {
     this.chart = chart
     PubSub.publish('Shares:chart1y-data-ready', chart)
-    console.log(chart);
+    // console.log(chart);
   });
 };
 
@@ -62,7 +62,7 @@ const Shares = function () {
   request.get().then((symbol) => {
     this.symbol = symbol
     PubSub.publish('Shares:symbol-data-ready', symbol)
-    console.log(symbol);
+    // console.log(symbol);
   });
 };
 
