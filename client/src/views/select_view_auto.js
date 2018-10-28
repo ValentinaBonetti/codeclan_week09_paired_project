@@ -7,14 +7,10 @@ const SelectViewAuto = function (selectElementAuto) {
 
 
 SelectViewAuto.prototype.bindEvents = function () {
+
   PubSub.subscribe('Shares:nameList-ready', (event) => {
     this.autocomplete(event.detail);
   });
-
-this.selectElementAuto.addEventListener('submit', (event) => {
-  const selectedShare = event.target.value;
-    PubSub.publish('SelectView:change', selectedShare);
-    });
 };
 
 SelectViewAuto.prototype.autocomplete = function (arr) {
@@ -110,8 +106,16 @@ SelectViewAuto.prototype.autocomplete = function (arr) {
   }
   /*execute a function when someone clicks in the document:*/
   document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
+      closeAllLists(e.target)
   });
+
+  const selectShare = document.querySelector('input#selectShare');
+  selectShare.addEventListener('submit', (event) => {
+    console.log("hi");
+    event.preventDefault();
+    // const selectedShare = event.target.value;
+      PubSub.publish('SelectView:change', event.target.value);
+      });
 };
 
   module.exports = SelectViewAuto;

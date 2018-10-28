@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0" http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="/js/bundle.js"></script>
   <link rel="stylesheet" href="/css/main.css">
   <title>Shares Portfolio App</title>
@@ -21,11 +19,11 @@
       </select> -->
   <p>Select a share:</p>
   <!--Make sure the form has the autocomplete function switched off:-->
-  <form autocomplete="off" action="/action_page.php">
+  <form id="auto" autocomplete="off">
     <div class="autocomplete" style="width:300px;">
       <input id="myInput" type="text" name="selectedShare" placeholder="Share">
-    </div>
-    <input type="submit">
+  </div>
+    <input id="selectShare" type="submit">
   </form>
 </body>
 </html>
