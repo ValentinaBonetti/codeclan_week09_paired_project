@@ -5,14 +5,23 @@ const Shares = function () {
   this.apiData = {};
   this.internalItems = [];
   this.internalRequest = new Request('/api/shares');
+  this.livePortfolioPrices = {};
 };
 
 Shares.prototype.bindEvents = function () {
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
     const totalCost = this.calculatePortfolioCost(sharesItems);
-    const livePrices = this.livePortfolioPrices(sharesItems);
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
+    // the following populates this.livePortfolioPrices:
+    this.getLivePortfolioPrices(sharesItems);
+    // the following (commented-out) publish is useless I think, delete it:
+    // PubSub.publish('SharesPortfolio:live-prices-ready',this.livePortfolioPrices);
+    PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
+      const livePrices = event.detail;
+      const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
+      PubSub.publish('SharesPortfolio:current-total-value-ready',currentTotalValue);
+    });
   });
 };
 
@@ -112,15 +121,25 @@ Shares.prototype.calculatePortfolioCost = function (sharesItems) {
 };
 
 // Live price data for shares in Internal API portfolio
-Shares.prototype.livePortfolioPrices = function (sharesItems) {
-  portfolio = "";
+Shares.prototype.getLivePortfolioPrices = function (sharesItems) {
+  var portfolio = "";
   sharesItems.forEach((item) => {
     portfolio += item.symbol+",";
   });
-  const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${portfolio}&types=price`)
+  const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${portfolio}&types=price`);
   request.get().then((price) => {
-    console.log(price);
-     return(price) });
-   };
+    PubSub.publish('SharesPortfolio:live-prices-ready',price);
+   });
+};
+
+// Calculate current value from live price data
+Shares.prototype.calculateCurrentPortfolioValue = function (sharesItems,livePrices) {
+  var total_value = 0;
+  sharesItems.forEach((item) => {
+    var sym = item.symbol
+    total_value += item.n_of_shares*livePrices[sym].price;
+  });
+  return total_value;
+};
 
 module.exports = Shares;
