@@ -79,6 +79,7 @@ Shares.prototype.bindEvents = function () {
     const request6 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/logo`);
     request6.get().then((logo) => {
       this.apiData.logo = logo.url});
+
     PubSub.publish('Shares:api-data-ready', this.apiData);
     console.log(this.apiData);
 };
@@ -119,7 +120,6 @@ Shares.prototype.livePortfolioPrices = function (sharesItems) {
   });
   const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${portfolio}&types=price`)
   request.get().then((price) => {
-    console.log(price);
      return(price) });
    };
 

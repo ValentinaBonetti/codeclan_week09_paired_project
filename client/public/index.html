@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="/js/bundle.js"></script>
   <link rel="stylesheet" href="/css/main.css">
   <title>Shares Portfolio App</title>
@@ -12,12 +12,20 @@
   <h1>SHARES PORTFOLIO APP</h1>
   <h3 id='portfolio header'>all my shares:</h3>
   <div id='summary-view'></div>
-  
+
   <div id='list_all_shares'></div>
 <br>
-  <label for="sharesName">Select a share:</label>
+  <!-- <label for="sharesName">Select a share:</label>
       <select id="sharesName">
         <option selected disabled></option>
-      </select>
+      </select> -->
+  <p>Select a share:</p>
+  <!--Make sure the form has the autocomplete function switched off:-->
+  <form autocomplete="off" action="/action_page.php">
+    <div class="autocomplete" style="width:300px;">
+      <input id="myInput" type="text" name="selectedShare" placeholder="Share">
+    </div>
+    <input type="submit">
+  </form>
 </body>
 </html>
