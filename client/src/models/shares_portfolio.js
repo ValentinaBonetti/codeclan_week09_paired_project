@@ -28,8 +28,8 @@ Shares.prototype.bindEvents = function () {
 // Gets symbol data from API for all shares (an array for all shares containing 8,750 hashes with keys - symbol:, name:, etc).  Subscribes for change in share name drop-down and returns selected share name.  Finds share symbol based on selected share name, calls getAPIData and getChartData functions and passes the selected share symbol.
   Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
-  request.get().then((symbols) => {
-    this.nameList(symbols);
+  request.get().then((summaryData) => {
+    this.nameList(summaryData);
     PubSub.publish('Shares:nameList-ready', this.nameList);
 
     PubSub.subscribe('SelectView:change', (event) => {
