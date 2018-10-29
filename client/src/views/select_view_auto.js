@@ -13,6 +13,7 @@ SelectViewAuto.prototype.bindEvents = function () {
   });
 };
 
+// autocomplete function "borrowed" from https://www.w3schools.com/howto/howto_js_autocomplete.asp
 SelectViewAuto.prototype.autocomplete = function (arr) {
   /*the autocomplete function takes two arguments,
   the text field element and an array of possible autocompleted values:*/
@@ -112,6 +113,7 @@ SelectViewAuto.prototype.autocomplete = function (arr) {
   const handleFormSubmit = function(event) {
     event.preventDefault();
     PubSub.publish('SelectView:change', event.target.selectedShare.value);
+    submitForm.reset();
   };
 
   const submitForm = document.querySelector('form');

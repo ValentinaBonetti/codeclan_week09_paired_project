@@ -31,8 +31,8 @@ Shares.prototype.bindEvents = function () {
 // getChartData functions and passes the selected share symbol.
   Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
-  request.get().then((symbols) => {
-    this.nameList(symbols);
+  request.get().then((summaryData) => {
+    this.nameList(summaryData);
     PubSub.publish('Shares:nameList-ready', this.nameList);
 
     PubSub.subscribe('SelectView:change', (event) => {
