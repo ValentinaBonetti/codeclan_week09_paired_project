@@ -27,6 +27,7 @@ ListAllMySharesView.prototype.emptyList = function () {
 
 ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray) {
   const allRefinedItems = new Array();
+
   sharesItemsArray.forEach(function(localItem) {
     // add what you want to show in table view:
     var refinedItem = {};
