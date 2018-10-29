@@ -5,7 +5,6 @@ const ListAllMySharesView = function (listElement) {
   this.element = listElement;
 };
 
-
 ListAllMySharesView.prototype.bindEvents = function () {
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
@@ -15,7 +14,6 @@ ListAllMySharesView.prototype.bindEvents = function () {
 
 ListAllMySharesView.prototype.renderList = function (sharesItems) {
   this.emptyList();
-  console.log('shares items before function',sharesItems);
   // select fields that you want to render in table and put in array:
   const sharesRefinedItems = this.selectTableFields(sharesItems);
   // items.forEach((item) => this.renderItem(item));
