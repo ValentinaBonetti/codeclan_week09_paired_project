@@ -13,19 +13,22 @@ Shares.prototype.bindEvents = function () {
     const sharesItems = event.detail;
     const totalCost = this.calculatePortfolioCost(sharesItems);
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
-    // the following populates this.livePortfolioPrices:
     this.getLivePortfolioPrices(sharesItems);
-    // the following (commented-out) publish is useless I think, delete it:
-    // PubSub.publish('SharesPortfolio:live-prices-ready',this.livePortfolioPrices);
     PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
       const livePrices = event.detail;
       const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
       PubSub.publish('SharesPortfolio:current-total-value-ready',currentTotalValue);
+      const totalGain = this.calculateTotalTodayGain(sharesItems);
+      })
+
     });
-  });
 };
 
-// Gets symbol data from API for all shares (an array for all shares containing 8,750 hashes with keys - symbol:, name:, etc).  Subscribes for change in share name drop-down and returns selected share name.  Finds share symbol based on selected share name, calls getAPIData and getChartData functions and passes the selected share symbol.
+// Gets symbol data from API for all shares (an array for all shares
+// containing 8,750 hashes with keys - symbol:, name:, etc).
+// Subscribes for change in share name drop-down and returns selected share name.
+// Finds share symbol based on selected share name, calls getAPIData and
+// getChartData functions and passes the selected share symbol.
   Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
   request.get().then((summaryData) => {
@@ -37,7 +40,7 @@ Shares.prototype.bindEvents = function () {
 
     const selectedShare = symbols.find(selected => selected.name === shareName);
     selectedSymbol = selectedShare.symbol;
-    this.getApiData(selectedSymbol);
+    this.getIndividualApiData(selectedSymbol);
     this.getChartData(selectedSymbol);
     // console.log(this.selectedSymbol);
     });
@@ -51,7 +54,7 @@ Shares.prototype.bindEvents = function () {
   };
 
 // Individual share data from the API for a specific share
-  Shares.prototype.getApiData = function (symbol) {
+  Shares.prototype.getIndividualApiData = function (symbol) {
     // console.log(symbol);
     const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);    request1.get().then((price) => {
       this.apiData.price = price});
@@ -90,7 +93,9 @@ Shares.prototype.bindEvents = function () {
       this.apiData.logo = logo.url});
 
     PubSub.publish('Shares:api-data-ready', this.apiData);
-    console.log(this.apiData);
+    // console.log('this api data:',this.apiData);
+    // debugger;
+    return this.apiData;
 };
 
 // Price data for 1 year for specific share
@@ -102,7 +107,7 @@ Shares.prototype.bindEvents = function () {
   });
 };
 
-////  INTERNAL API
+// INTERNAL API
 Shares.prototype.getInternalSharesData = function () {
   this.internalRequest
     .get()
@@ -113,6 +118,7 @@ Shares.prototype.getInternalSharesData = function () {
     .catch((error) => console.error(error));
 };
 
+// Calculates the cost of the portfolio from the internal API
 Shares.prototype.calculatePortfolioCost = function (sharesItems) {
     var total_cost = 0;
     sharesItems.forEach((item) => {
@@ -137,10 +143,30 @@ Shares.prototype.getLivePortfolioPrices = function (sharesItems) {
 Shares.prototype.calculateCurrentPortfolioValue = function (sharesItems,livePrices) {
   var total_value = 0;
   sharesItems.forEach((item) => {
-    var sym = item.symbol
-    total_value += item.n_of_shares*livePrices[sym].price;
+    total_value += item.n_of_shares*livePrices[item.symbol].price;
   });
   return total_value;
 };
+
+// Calculate individual share today's gain from api data and internal db n_of_shares
+Shares.prototype.calculateIndividualTodayGain = function (symbol) {
+  var today_share_gain = 0;
+  const allSymbolInfo = this.getIndividualApiData(symbol);
+  today_share_gain = allSymbolInfo.price - allSymbolInfo.previousClose;
+  // debugger;
+  console.log('today share gain =',today_share_gain);
+  return today_share_gain;
+};
+
+// Calculate total today's shares gain
+Shares.prototype.calculateTotalTodayGain = function (sharesItems) {
+  var today_total_gain = 0;
+  sharesItems.forEach((item) => {
+    today_total_gain += this.calculateIndividualTodayGain(item.symbol);
+  });
+  console.log('today total gain =',today_total_gain);
+  return today_total_gain;
+};
+
 
 module.exports = Shares;
