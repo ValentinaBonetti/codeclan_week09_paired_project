@@ -101,6 +101,7 @@ Shares.prototype.bindEvents = function () {
       apiObject.website = values[3].website
       apiObject.peers = values[4].symbols
       apiObject.logo = values[5].logo
+      PubSub.publish('Shares:api-data-ready',apiObject);
       return apiObject;
     });
 };
