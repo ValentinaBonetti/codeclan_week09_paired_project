@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const shares = new Shares();
   shares.bindEvents();
   shares.getSymbolData();
+  // getInternalSharesData publishes the static DB data 
   shares.getInternalSharesData();
 
 });
