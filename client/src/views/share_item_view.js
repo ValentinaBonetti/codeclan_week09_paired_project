@@ -1,6 +1,6 @@
 const PubSub = require('../helpers/pub_sub.js');
 
-const ShareItemView = function(item) {
+const ShareItemView = function(container) {
   this.item = item;
   this.element = null;
 };
