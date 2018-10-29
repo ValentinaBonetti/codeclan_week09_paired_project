@@ -38,7 +38,7 @@ Shares.prototype.bindEvents = function () {
     PubSub.subscribe('SelectView:change', (event) => {
     const shareName = event.detail;
 
-    const selectedShare = symbols.find(selected => selected.name === shareName);
+    const selectedShare = summaryData.find(selected => selected.name === shareName);
     selectedSymbol = selectedShare.symbol;
     this.getIndividualApiData(selectedSymbol);
     this.getChartData(selectedSymbol);
@@ -82,6 +82,7 @@ Shares.prototype.bindEvents = function () {
     request4.get().then((company) => {
       this.apiData.CEO = company.CEO
       this.apiData.companyName = company.companyName
+      this.apiData.description = company.description
       this.apiData.industry = company.industry
       this.apiData.sector = company.sector
       this.apiData.website = company.website});
@@ -94,7 +95,7 @@ Shares.prototype.bindEvents = function () {
 
     PubSub.publish('Shares:api-data-ready', this.apiData);
     // console.log('this api data:',this.apiData);
-    // debugger;
+
     return this.apiData;
 };
 

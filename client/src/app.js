@@ -3,6 +3,7 @@ const ListAllMySharesView = require('./views/list_all_my_shares_view.js');
 // const SelectView = require('./views/select_view.js');
 const SelectViewAuto = require('./views/select_view_auto.js');
 const SummaryView = require('./views/summary_view.js');
+const ShareItemView = require('./views/share_item_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -13,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const list_all_shares = document.querySelector('div#list_all_shares');
   const listAllMySharesView = new ListAllMySharesView(list_all_shares);
   listAllMySharesView.bindEvents();
+
+  const Container = document.querySelector('div#share_item_view');
+  const shareItemView = new ShareItemView(Container);
+  shareItemView.bindEvents();
 
   // const selectElement = document.querySelector('select#sharesName');
   // const selectView = new SelectView(selectElement);
