@@ -2,7 +2,8 @@ const PubSub = require('../helpers/pub_sub.js');
 const Request = require('../helpers/request.js')
 
 const Shares = function () {
-  this.apiData = {};
+  // this.apiData = {};
+  this.allPortfolioExtenalApiData = [];
   this.internalItems = [];
   this.internalRequest = new Request('/api/shares');
   this.livePortfolioPrices = {};
@@ -18,9 +19,21 @@ Shares.prototype.bindEvents = function () {
       const livePrices = event.detail;
       const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
       PubSub.publish('SharesPortfolio:current-total-value-ready',currentTotalValue);
-      const totalGain = this.calculateTotalTodayGain(sharesItems);
-      })
-
+    });
+    PubSub.subscribe('SharesPortfolio:allPortfolioExtenalApiData-ready',(event) => {
+      var today_total_gain = 0;
+      const portfolioArray = event.detail;
+      portfolioArray.forEach((share) => {
+        var share_today_gain = 0;
+        share_today_gain = share.price - share.previousClose;
+        today_total_gain += share_today_gain;
+      });
+      console.log("Today NEW total gain:",today_total_gain);
+      PubSub.publish('SharesPortfolio:todayTotalGain-ready',today_total_gain);
+    });
+  // );
+    this.collectAllPortfolioExtenalApiData(sharesItems);
+    // this.calculateTotalTodayGain(sharesItems);
     });
 };
 
@@ -55,48 +68,55 @@ Shares.prototype.bindEvents = function () {
 
 // Individual share data from the API for a specific share
   Shares.prototype.getIndividualApiData = function (symbol) {
-    // console.log(symbol);
-    const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);    request1.get().then((price) => {
-      this.apiData.price = price});
+    const apiObject = {};
+    const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);
     const request2 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/quote`);
-    request2.get().then((quote) => {
-      this.apiData.avgTotalVolume = quote.avgTotalVolume;
-      this.apiData.change = quote.change;
-      this.apiData.changePercent = quote.changePercent;
-      this.apiData.close = quote.close;
-      this.apiData.companyName = quote.companyName;
-      this.apiData.latestVolume = quote.latestVolume;
-      this.apiData.marketCap = quote.marketCap;
-      this.apiData.peRatio = quote.peRatio;
-      this.apiData.previousClose = quote.previousClose;
-      this.apiData.primaryExchange = quote.primaryExchange;
-      this.apiData.symbol = quote.symbol
-      this.apiData.week52High = quote.week52High
-      this.apiData.week52Low = quote.week52Low});
     const request3 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/stats`);
-    request3.get().then((stats) => {
-      this.apiData.consensusEPS = stats.consensusEPS
-      this.apiData.dividendYield = stats.dividendYield
-      this.apiData.exDividendDate = stats.exDividendDate});
     const request4 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/company`);
-    request4.get().then((company) => {
-      this.apiData.CEO = company.CEO
-      this.apiData.companyName = company.companyName
-      this.apiData.description = company.description
-      this.apiData.industry = company.industry
-      this.apiData.sector = company.sector
-      this.apiData.website = company.website});
     const request5 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/relevant`);
-    request5.get().then((peers) => {
-      this.apiData.peers = peers.symbols});
     const request6 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/logo`);
-    request6.get().then((logo) => {
-      this.apiData.logo = logo.url});
+    return Promise.all([request1.get(), request2.get(), request3.get(), request4.get(), request5.get(),request6.get()]).then((values) => {
+      apiObject.price = values[0];
+      apiObject.avgTotalVolume = values[1].avgTotalVolume;
+      apiObject.change = values[1].change;
+      apiObject.changePercent = values[1].changePercent;
+      apiObject.close = values[1].close;
+      apiObject.companyName = values[1].companyName;
+      apiObject.latestVolume = values[1].latestVolume;
+      apiObject.marketCap = values[1].marketCap;
+      apiObject.peRatio = values[1].peRatio;
+      apiObject.previousClose = values[1].previousClose;
+      apiObject.primaryExchange = values[1].primaryExchange;
+      apiObject.symbol = values[1].symbol
+      apiObject.week52High = values[1].week52High
+      apiObject.week52Low = values[1].week52Low
+      apiObject.consensusEPS = values[2].consensusEPS
+      apiObject.dividendYield = values[2].dividendYield
+      apiObject.exDividendDate = values[2].exDividendDate
+      apiObject.CEO = values[3].CEO
+      apiObject.companyName = values[3].companyName
+      apiObject.description = values[3].description
+      apiObject.industry = values[3].industry
+      apiObject.sector = values[3].sector
+      apiObject.website = values[3].website
+      apiObject.peers = values[4].symbols
+      apiObject.logo = values[5].logo
+      return apiObject;
+    });
+};
 
-    PubSub.publish('Shares:api-data-ready', this.apiData);
-    // console.log('this api data:',this.apiData);
-
-    return this.apiData;
+// Collect all the external API data for the portfolio:
+Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
+  const allPortfolioData = new Array();
+  const promises = sharesItems.map(async (item) => {
+    var itemData = {};
+    var itemData = await this.getIndividualApiData(item.symbol);
+    allPortfolioData.push(itemData)
+  });
+  Promise.all(promises).then(() => {
+    console.log('All portfolio data:', allPortfolioData);
+    PubSub.publish('SharesPortfolio:allPortfolioExtenalApiData-ready',allPortfolioData);
+  });
 };
 
 // Price data for 1 year for specific share
@@ -150,9 +170,9 @@ Shares.prototype.calculateCurrentPortfolioValue = function (sharesItems,livePric
 };
 
 // Calculate individual share today's gain from api data and internal db n_of_shares
-Shares.prototype.calculateIndividualTodayGain = function (symbol) {
+Shares.prototype.calculateIndividualTodayGain = async function (symbol) {
   var today_share_gain = 0;
-  const allSymbolInfo = this.getIndividualApiData(symbol);
+  const allSymbolInfo = await this.getIndividualApiData(symbol);
   today_share_gain = allSymbolInfo.price - allSymbolInfo.previousClose;
   // debugger;
   console.log('today share gain =',today_share_gain);
@@ -160,10 +180,12 @@ Shares.prototype.calculateIndividualTodayGain = function (symbol) {
 };
 
 // Calculate total today's shares gain
-Shares.prototype.calculateTotalTodayGain = function (sharesItems) {
+Shares.prototype.calculateTotalTodayGain = async function (sharesItems) {
   var today_total_gain = 0;
-  sharesItems.forEach((item) => {
-    today_total_gain += this.calculateIndividualTodayGain(item.symbol);
+  sharesItems.forEach(async (item) => {
+    let item_gain = await this.calculateIndividualTodayGain(item.symbol);
+    today_total_gain += item_gain;
+    console.log('today partial total gain =',today_total_gain);
   });
   console.log('today total gain =',today_total_gain);
   return today_total_gain;
