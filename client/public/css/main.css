@@ -4,6 +4,13 @@ body {
   text-align: center;
 }
 
+h4 {
+    padding: 20px;
+    background-color: lightblue;
+    margin: 20px;
+    border: 1px solid dodgerblue;
+}
+
 table {
   width: 80%;
   margin: 0 auto;
@@ -13,6 +20,14 @@ table, th, td  {
   border: 1px solid DodgerBlue;
   padding: 10px;
   text-align: center;
+}
+
+div#summary-view {
+  background-color: lightgrey;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+
 }
 
 #internal-api-table-container {
@@ -148,5 +163,5 @@ input[type=submit] {
 }
 
 #divgraph{
-  
+
 }
