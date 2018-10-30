@@ -17,7 +17,6 @@ ListAllMySharesView.prototype.bindEvents = function () {
       })
     });
   });
-
 };
 
 ListAllMySharesView.prototype.renderList = function (sharesItems,sharesItemsExternalInfo) {
@@ -50,14 +49,18 @@ ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray,sha
     refinedItem['current price'] = found.price;
     refinedItem['value'] = Math.round(found.price*localItem.n_of_shares);
     refinedItem['gain/(loss)'] = Math.round(found.price*localItem.n_of_shares-(localItem.cost_per_share*localItem.n_of_shares));
+    // Unsuccessful attempt to put a sell button in the last column:
+    // var sellButton = document.createElement('button');
+    // sellButton.id = refinedItem.symbol;
+    // var button_div = document.querySelector(`#${refinedItem.symbol}`);
+    // //  sellButton.textContent = "sell";
+    // button_div.appendChild(sellButton);
+    // refinedItem.sell = button_div;
     allRefinedItems.push(refinedItem);
   });
   return allRefinedItems;
 };
-// ListAllMySharesView.prototype.renderItem = function (item) {
-//   // const listItemView = new ListView
-//   console.log(item.name);
-// };
+
 
 ListAllMySharesView.prototype.buildTable = function (items) {
   var html = tableify(items);

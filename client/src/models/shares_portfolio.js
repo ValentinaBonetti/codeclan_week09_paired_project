@@ -1,5 +1,5 @@
 const PubSub = require('../helpers/pub_sub.js');
-const Request = require('../helpers/request.js')
+const Request = require('../helpers/request.js');
 
 const Shares = function () {
   // this.apiData = {};
@@ -90,6 +90,8 @@ Shares.prototype.bindEvents = function () {
       apiObject.symbol = values[1].symbol
       apiObject.week52High = values[1].week52High
       apiObject.week52Low = values[1].week52Low
+      apiObject.priceToSales = values[2].priceToSales;
+      apiObject.priceToBook = values[2].priceToBook;
       apiObject.consensusEPS = values[2].consensusEPS
       apiObject.dividendYield = values[2].dividendYield
       apiObject.exDividendDate = values[2].exDividendDate
