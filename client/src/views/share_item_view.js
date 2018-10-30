@@ -15,6 +15,11 @@ ShareItemView.prototype.bindEvents = function () {
       const share = event.detail;
       this.renderView(share);
       this.buyBtnClicked(share);
+
+      const chart = new Chart();
+      chart.bindEvents();
+
+
     })
   })
 };
@@ -188,9 +193,9 @@ ShareItemView.prototype.renderView = function (share) {
   const graph = document.createElement('div');
   graph.classList.add('divgraph');
   graph.setAttribute("id","chart");
-  graphItem.appendChild(graph)
+  graphItem.appendChild(graph);
 
-  this.createChart();
+  // makeChart();
 
 };
 
@@ -199,16 +204,5 @@ const element = document.createElement('p');
 element.textContent = `${label}    ${property}`;
 return element;
 };
-
-ShareItemView.prototype.createChart = function () {
-  PubSub.subscribe('Shares:chart1y-data-ready', (event) => {
-    const shareData = event.detail;
-    console.log(shareData);
-    const chart_container = document.querySelector('#chart');
-    const chart = new Chart(chart_container);
-    chart.bindEvents();
-  });
-};
-
 
 module.exports = ShareItemView;

@@ -28,10 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareItemView = new ShareItemView(individual_share);
   shareItemView.bindEvents();
 
-
   const selectElementAuto = document.querySelector('input#myInput');
   const selectViewAuto = new SelectViewAuto(selectElementAuto);
   selectViewAuto.bindEvents();
+
+
 
   const shares = new Shares();
   shares.bindEvents();
