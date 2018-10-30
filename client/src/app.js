@@ -1,33 +1,33 @@
 const Shares = require ('./models/shares_portfolio.js');
+const NavView = require('./views/nav_view.js');
 const ListAllMySharesView = require('./views/list_all_my_shares_view.js');
-// const SelectView = require('./views/select_view.js');
 const SelectViewAuto = require('./views/select_view_auto.js');
 const SummaryView = require('./views/summary_view.js');
 const ShareItemView = require('./views/share_item_view.js');
-const Chart = require('./views/share-item-price-graph.js');
+const DashboardView = require('./views/dashboard_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  const nav_bar = document.querySelector('#nav-bar');
+  const navView = new NavView(nav_bar);
+  navView.bindEvents();
 
   const summary_view = document.querySelector('#summary-view');
   const summaryView = new SummaryView(summary_view);
   summaryView.bindEvents();
 
-  const list_all_shares = document.querySelector('div#list_all_shares');
+  const dashboard_view = document.querySelector('div#central-container');
+  const dashboardView = new DashboardView(dashboard_view);
+  dashboardView.bindEvents();
+
+  const list_all_shares = document.querySelector('div#central-container');
   const listAllMySharesView = new ListAllMySharesView(list_all_shares);
   listAllMySharesView.bindEvents();
 
-  const Container = document.querySelector('div#share_item_view');
-  const shareItemView = new ShareItemView(Container);
+  const individual_share = document.querySelector('div#share_item_view');
+  const shareItemView = new ShareItemView(individual_share);
   shareItemView.bindEvents();
 
-  const Container2 = document.querySelector('.divGraph');
-  const chart = new Chart(Container2);
-  chart.bindEvents();
-
-
-  // const selectElement = document.querySelector('select#sharesName');
-  // const selectView = new SelectView(selectElement);
-  // selectView.bindEvents();
 
   const selectElementAuto = document.querySelector('input#myInput');
   const selectViewAuto = new SelectViewAuto(selectElementAuto);

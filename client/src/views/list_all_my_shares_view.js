@@ -7,11 +7,14 @@ const ListAllMySharesView = function (listElement) {
 };
 
 ListAllMySharesView.prototype.bindEvents = function () {
+
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
     PubSub.subscribe('SharesPortfolio:allPortfolioExtenalApiData-ready', (event) => {
       const sharesItemsExtenalInfo = event.detail;
-      this.renderList(sharesItems,sharesItemsExtenalInfo);
+      PubSub.subscribe('NavView:my-shares-button-clicked', (event) => {
+        this.renderList(sharesItems,sharesItemsExtenalInfo);
+      })
     });
   });
 

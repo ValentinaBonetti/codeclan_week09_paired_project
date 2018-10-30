@@ -22,6 +22,7 @@ SummaryView.prototype.bindEvents = function () {
     todayTotalGainHeader.textContent = 'todays gain: ' + todayTotalGain.toPrecision(5);
     this.element.appendChild(todayTotalGainHeader);
   })
+
 };
 
 module.exports = SummaryView;
