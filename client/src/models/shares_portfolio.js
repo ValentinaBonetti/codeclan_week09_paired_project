@@ -10,16 +10,25 @@ const Shares = function () {
 };
 
 Shares.prototype.bindEvents = function () {
+
+  PubSub.subscribe('BuyAndSellView:put-share-in-internal-db', (event) => {
+    const shareToAddToDB = event.detail;
+    this.add(shareToAddToDB);
+  });
+
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
     const totalCost = this.calculatePortfolioCost(sharesItems);
+
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
     this.getLivePortfolioPrices(sharesItems);
+
     PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
       const livePrices = event.detail;
       const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
       PubSub.publish('SharesPortfolio:current-total-value-ready',currentTotalValue);
     });
+
     PubSub.subscribe('SharesPortfolio:allPortfolioExtenalApiData-ready',(event) => {
       var today_total_gain = 0;
       const portfolioArray = event.detail;
@@ -28,7 +37,6 @@ Shares.prototype.bindEvents = function () {
         share_today_gain = share.price - share.previousClose;
         today_total_gain += share_today_gain;
       });
-      console.log("Today NEW total gain:",today_total_gain);
       PubSub.publish('SharesPortfolio:todayTotalGain-ready',today_total_gain);
     });
   // );
@@ -42,7 +50,7 @@ Shares.prototype.bindEvents = function () {
 // Subscribes for change in share name drop-down and returns selected share name.
 // Finds share symbol based on selected share name, calls getAPIData and
 // getChartData functions and passes the selected share symbol.
-  Shares.prototype.getSymbolData = function () {
+Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
   request.get().then((summaryData) => {
     this.nameList(summaryData);
@@ -61,13 +69,13 @@ Shares.prototype.bindEvents = function () {
 };
 
 // Prepares array of all share names :
-  Shares.prototype.nameList = function (shares) {
+Shares.prototype.nameList = function (shares) {
   const nameList = shares.map(share => share.name);
   this.nameList = nameList;
-  };
+};
 
 // Individual share data from the API for a specific share
-  Shares.prototype.getIndividualApiData = function (symbol) {
+Shares.prototype.getIndividualApiData = function (symbol) {
     const apiObject = {};
     const request1 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/price`);
     const request2 = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/quote`);
@@ -123,7 +131,7 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
 };
 
 // Price data for 1 year for specific share
-  Shares.prototype.getChartData = function (symbol) {
+Shares.prototype.getChartData = function (symbol) {
   const chartObject = {};
   const request = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`);
   request.get().then((chart) => {
@@ -141,6 +149,17 @@ Shares.prototype.getInternalSharesData = function () {
       PubSub.publish('SharesPortfolio:internal-api-list-ready', this.internalItems);
     })
     .catch((error) => console.error(error));
+};
+
+Shares.prototype.add = function(newItem) {
+  this.internalRequest
+    .post(newItem)
+    .then(
+      (listSharesItems) => {
+        this.internalItems = listSharesItems;
+        PubSub.publish('SharesPortfolio:internal-api-list-ready', this.internalItems);
+      })
+    .catch((err) => console.error(err));
 };
 
 // Calculates the cost of the portfolio from the internal API

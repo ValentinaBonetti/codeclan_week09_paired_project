@@ -4,6 +4,9 @@ const SummaryView = function (element) {
 }
 
 SummaryView.prototype.bindEvents = function () {
+
+  this.element.innerHTML = '';
+  
   PubSub.subscribe('SharesPortfolio:total-cost-ready', (event) => {
     const totalCost = event.detail;
     const totalValueHeader = document.createElement('h4');
