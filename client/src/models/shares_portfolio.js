@@ -160,7 +160,6 @@ Shares.prototype.add = function(newItem) {
       (listSharesItems) => {
         this.internalItems = listSharesItems;
         PubSub.publish('SharesPortfolio:internal-api-list-ready', this.internalItems);
-        // PubSub.publish('SharesPortfolio:internal-api-list-updated', this.internalItems);
       })
     .catch((err) => console.error(err));
 };
