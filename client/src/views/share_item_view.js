@@ -1,6 +1,9 @@
 const Shares = require ('../models/shares_portfolio.js');
 const dateFormat = require('dateformat');
 const PubSub = require('../helpers/pub_sub.js');
+const Chart = require('./share_item_price_graph.js');
+
+
 const ShareItemView = function(container) {
   this.container = container;
 };
@@ -11,8 +14,17 @@ ShareItemView.prototype.bindEvents = function () {
       console.log('API data passed to ShareItemView', event.detail);
       const share = event.detail;
       this.renderView(share);
+      this.buyBtnClicked(share);
     })
   })
+};
+
+ShareItemView.prototype.buyBtnClicked = function (share) {
+  const buy_button = document.querySelector('#buy-button');
+  buy_button.addEventListener('click', () => {
+    PubSub.publish('ShareItemView:buy-button-clicked', share);
+    console.log(share);
+  });
 };
 
 ShareItemView.prototype.clearView = function () {
@@ -164,6 +176,7 @@ ShareItemView.prototype.renderView = function (share) {
 
   const btnBuy = document.createElement("button");
   const textBuy = document.createTextNode("BUY");
+  btnBuy.setAttribute("id","buy-button");
   btnBuy.appendChild(textBuy);
   graphButtons.appendChild(btnBuy);
 
@@ -177,6 +190,8 @@ ShareItemView.prototype.renderView = function (share) {
   graph.setAttribute("id","chart");
   graphItem.appendChild(graph)
 
+  this.createChart();
+
 };
 
 ShareItemView.prototype.createDetail = function (label, property) {
@@ -185,5 +200,15 @@ element.textContent = `${label}    ${property}`;
 return element;
 };
 
+ShareItemView.prototype.createChart = function () {
+  PubSub.subscribe('Shares:chart1y-data-ready', (event) => {
+    const shareData = event.detail;
+    console.log(shareData);
+    const chart_container = document.querySelector('#chart');
+    const chart = new Chart(chart_container);
+    chart.bindEvents();
+  });
+};
 
-  module.exports = ShareItemView;
+
+module.exports = ShareItemView;
