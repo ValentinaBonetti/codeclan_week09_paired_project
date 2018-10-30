@@ -5,6 +5,7 @@ const SelectViewAuto = require('./views/select_view_auto.js');
 const SummaryView = require('./views/summary_view.js');
 const ShareItemView = require('./views/share_item_view.js');
 const DashboardView = require('./views/dashboard_view.js');
+const BuyAndSellView = require('./views/buy_and_sell_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -16,23 +17,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const summaryView = new SummaryView(summary_view);
   summaryView.bindEvents();
 
-  const dashboard_view = document.querySelector('div#central-container');
-  const dashboardView = new DashboardView(dashboard_view);
+  const central_container = document.querySelector('div#central-container');
+
+  const dashboardView = new DashboardView(central_container);
   dashboardView.bindEvents();
 
-  const list_all_shares = document.querySelector('div#central-container');
-  const listAllMySharesView = new ListAllMySharesView(list_all_shares);
+  const listAllMySharesView = new ListAllMySharesView(central_container);
   listAllMySharesView.bindEvents();
 
-  const individual_share = document.querySelector('div#central-container');
-  const shareItemView = new ShareItemView(individual_share);
+  const shareItemView = new ShareItemView(central_container);
   shareItemView.bindEvents();
+
+  const buyAndSellView = new BuyAndSellView(central_container);
+  buyAndSellView.bindEvents();
 
   const selectElementAuto = document.querySelector('input#myInput');
   const selectViewAuto = new SelectViewAuto(selectElementAuto);
   selectViewAuto.bindEvents();
-
-
 
   const shares = new Shares();
   shares.bindEvents();
