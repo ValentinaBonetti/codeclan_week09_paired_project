@@ -14,7 +14,11 @@ ListAllMySharesView.prototype.bindEvents = function () {
       const sharesItemsExtenalInfo = event.detail;
       PubSub.subscribe('NavView:my-shares-button-clicked', (event) => {
         this.renderList(sharesItems,sharesItemsExtenalInfo);
-      })
+      });
+      // PubSub.subscribe('SharesPortfolio:internal-api-list-updated', (event) => {
+      //   const updatedSharesItems = event.detail;
+      //   this.renderList(updatedSharesItems,sharesItemsExtenalInfo);
+      // })
     });
   });
 };
