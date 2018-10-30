@@ -15,13 +15,8 @@ ShareItemView.prototype.bindEvents = function () {
       const share = event.detail;
       this.renderView(share);
       this.buyBtnClicked(share);
-
-      const chart = new Chart();
-      chart.bindEvents();
-
-
-    })
-  })
+  });
+});
 };
 
 ShareItemView.prototype.buyBtnClicked = function (share) {
@@ -38,9 +33,14 @@ ShareItemView.prototype.clearView = function () {
 
 ShareItemView.prototype.renderView = function (share) {
   this.clearView();
+
+  const bothItems = document.createElement('div');
+  bothItems.classList.add('divBoth-items');
+  this.container.appendChild(bothItems)
+
   const shareItem = document.createElement('div');
   shareItem.classList.add('divShare-item');
-  this.container.appendChild(shareItem)
+  bothItems.appendChild(shareItem)
 
   const divName = document.createElement('div');
   divName.classList.add('divName');
@@ -173,7 +173,7 @@ ShareItemView.prototype.renderView = function (share) {
 
   const graphItem = document.createElement('div');
   graphItem.classList.add('divGraph-item');
-  this.container.appendChild(graphItem)
+  bothItems.appendChild(graphItem)
 
   const graphButtons = document.createElement('div');
   graphButtons.classList.add('divgraphButtons');
@@ -195,7 +195,10 @@ ShareItemView.prototype.renderView = function (share) {
   graph.setAttribute("id","chart");
   graphItem.appendChild(graph);
 
-  // makeChart();
+  PubSub.subscribe('Shares:chart1y-data-ready', (event) => {
+    const chart = new Chart(event.detail);
+    chart.bindEvents();
+});
 
 };
 

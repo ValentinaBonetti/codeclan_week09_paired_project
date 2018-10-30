@@ -54,7 +54,7 @@ Shares.prototype.bindEvents = function () {
     const selectedShare = summaryData.find(selected => selected.name === shareName);
     selectedSymbol = selectedShare.symbol;
     this.getIndividualApiData(selectedSymbol);
-    this.getChartData(selectedSymbol);
+
     // console.log(this.selectedSymbol);
     });
   });
@@ -103,6 +103,7 @@ Shares.prototype.bindEvents = function () {
       apiObject.website = values[3].website
       apiObject.peers = values[4].symbols.slice(0,5)
       apiObject.logo = values[5].url
+      this.getChartData(symbol);
       PubSub.publish('Shares:api-data-ready',apiObject);
       return apiObject;
     });
@@ -127,9 +128,22 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
   const chartObject = {};
   const request = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`);
   request.get().then((chart) => {
-    PubSub.publish('Shares:chart1y-data-ready', chart)
-    console.log(chart);
+    this.prepareChartData(chart);
   });
+};
+
+Shares.prototype.prepareChartData = function (chart_objects) {
+console.log(chart_objects);
+  var chartArray = [["Date","Price"]];
+  var carrierArray=[];
+  chart_objects.forEach((item) => {
+    carrierArray.push(new Date(item.date));
+    carrierArray.push(parseFloat(item.close));
+    chartArray.push(carrierArray)
+    carrierArray=[];
+  });
+  PubSub.publish('Shares:chart1y-data-ready', chartArray)
+  console.log("1yr data", chartArray);
 };
 
 // INTERNAL API

@@ -1,17 +1,12 @@
 const PubSub = require('../helpers/pub_sub.js');
 
-const Chart = function () {
+const Chart = function (chartData) {
+  this.chartData = chartData;
 };
 
 Chart.prototype.drawChart = function(){
-  var data = new google.visualization.arrayToDataTable([
-    ['Year', 'Sales', 'Expenses'],
-     ['2013',  1000,      400],
-     ['2014',  1170,      460],
-     ['2015',  660,       1120],
-     ['2016',  1030,      540]
-  ]);
-
+  var data = new google.visualization.arrayToDataTable(this.chartData);
+  console.log("craigs effort", this.chartData);
   var options = {
          title: 'Company Performance',
          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
@@ -23,12 +18,22 @@ Chart.prototype.drawChart = function(){
   chart.draw(data, options);
 };
 
-
 Chart.prototype.bindEvents = function () {
   google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(this.drawChart);
+  google.charts.setOnLoadCallback(this.drawChart.bind(this));
+  // google.charts.setOnLoadCallback(() => {
+  //   var data = new google.visualization.arrayToDataTable(this.chartData);
+  //   console.log("craigs effort", this.chartData);
+  //   var options = {
+  //          title: 'Company Performance',
+  //          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+  //          vAxis: {minValue: 0},
+  //          legend: null
+  //        };
+  //
+  //   var chart = new google.visualization.LineChart(document.getElementById('chart'));
+  //   chart.draw(data, options);
+  // });
 };
-
-
 
 module.exports = Chart;
