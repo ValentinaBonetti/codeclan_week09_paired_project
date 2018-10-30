@@ -1,18 +1,66 @@
 /* LISTALLMYSHARESVIEW FORMATTING : */
 
 body {
+  margin: 0;
   /* text-align: center; */
+  position: relative;
+}
+
+body::after {
+ content: "";
+ background-image: url("https://images.financialexpress.com/2017/06/stock-1.jpg");
+ background-size: 100% 100%;
+  /* background-size: contain; */
+ opacity: 0.2;
+ top: 0;
+ left: 0;
+ bottom: 0;
+ right: 0;
+ position: absolute;
+ z-index: -1;
+}
+
+h1 {
+  margin-top: 0px;
+  padding-top: 20px;
+}
+
+h4 {
+    padding: 20px;
+    background-color: lightblue;
+    margin: 20px;
+    border: 1px solid dodgerblue;
+
 }
 
 table {
   width: 80%;
   margin: 0 auto;
+  background-color: #F0F0F0;
 }
 
 table, th, td  {
   border: 1px solid DodgerBlue;
   padding: 10px;
   text-align: center;
+}
+
+div#summary-view {
+  /* background-color: #F0F0F0; */
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+div#nav-bar {
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  /* background-color: #F0F0F0; */
+  height: 30px;
+  margin-bottom: 20px;
+  align-items: center;
 }
 
 #internal-api-table-container {

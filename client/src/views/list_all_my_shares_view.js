@@ -3,19 +3,24 @@ const tableify = require('tableify');
 
 const ListAllMySharesView = function (listElement) {
   this.element = listElement;
+
 };
 
 ListAllMySharesView.prototype.bindEvents = function () {
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     const sharesItems = event.detail;
-    this.renderList(sharesItems);
+    PubSub.subscribe('SharesPortfolio:allPortfolioExtenalApiData-ready', (event) => {
+      const sharesItemsExtenalInfo = event.detail;
+      this.renderList(sharesItems,sharesItemsExtenalInfo);
+    });
   });
+
 };
 
-ListAllMySharesView.prototype.renderList = function (sharesItems) {
+ListAllMySharesView.prototype.renderList = function (sharesItems,sharesItemsExternalInfo) {
   this.emptyList();
   // select fields that you want to render in table and put in array:
-  const sharesRefinedItems = this.selectTableFields(sharesItems);
+  const sharesRefinedItems = this.selectTableFields(sharesItems,sharesItemsExternalInfo);
   // items.forEach((item) => this.renderItem(item));
   // otherwise this one returns everything in db, including _id:
   this.buildTable(sharesRefinedItems);
@@ -25,9 +30,10 @@ ListAllMySharesView.prototype.emptyList = function () {
   this.element.innerHTML = '';
 };
 
-ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray) {
+ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray,sharesItemsExtenalInfoArray) {
   const allRefinedItems = new Array();
-
+  console.log('sharesItemsArray:',sharesItemsArray);
+  console.log('sharesItemsExtenalInfoArray:',sharesItemsExtenalInfoArray);
   sharesItemsArray.forEach(function(localItem) {
     // add what you want to show in table view:
     var refinedItem = {};
@@ -37,6 +43,8 @@ ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray) {
     refinedItem.currency = localItem.currency;
     refinedItem.purchase = localItem.cost_per_share;
     refinedItem.cost = localItem.cost_per_share*localItem.n_of_shares;
+    var found = sharesItemsExtenalInfoArray.find((share) => share.symbol === localItem.symbol);
+    refinedItem.price = found.price;
     allRefinedItems.push(refinedItem);
   });
   return allRefinedItems;
