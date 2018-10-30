@@ -4,6 +4,7 @@ const ListAllMySharesView = require('./views/list_all_my_shares_view.js');
 const SelectViewAuto = require('./views/select_view_auto.js');
 const SummaryView = require('./views/summary_view.js');
 const ShareItemView = require('./views/share_item_view.js');
+const Chart = require('./views/share-item-price-graph.js');
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -18,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const Container = document.querySelector('div#share_item_view');
   const shareItemView = new ShareItemView(Container);
   shareItemView.bindEvents();
+
+  const Container2 = document.querySelector('.divGraph');
+  const chart = new Chart(Container2);
+  chart.bindEvents();
+
 
   // const selectElement = document.querySelector('select#sharesName');
   // const selectView = new SelectView(selectElement);

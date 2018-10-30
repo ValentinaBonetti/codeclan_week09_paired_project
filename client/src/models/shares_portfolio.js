@@ -99,8 +99,8 @@ Shares.prototype.bindEvents = function () {
       apiObject.industry = values[3].industry
       apiObject.sector = values[3].sector
       apiObject.website = values[3].website
-      apiObject.peers = values[4].symbols
-      apiObject.logo = values[5].logo
+      apiObject.peers = values[4].symbols.slice(0,5)
+      apiObject.logo = values[5].url
       PubSub.publish('Shares:api-data-ready',apiObject);
       return apiObject;
     });

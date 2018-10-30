@@ -1,7 +1,7 @@
 /* LISTALLMYSHARESVIEW FORMATTING : */
 
 body {
-  text-align: center;
+  /* text-align: center; */
 }
 
 table {
@@ -88,65 +88,113 @@ input[type=submit] {
 
 #share_item_view{
   display: flex;
-  justify-content: space-between;
+  margin-left: 50px;
+  /* justify-content: space-around; */
 }
 
-#divShare-item{
-
-}
-
-#divExchSymb{
-
-}
-
-#divPriceBlock{
+.divShare-item{
+  width: 550px;
 
 }
 
-#divPrice{
+.divName{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+h2 {
+  margin: 0px;
+}
+
+p {
+  margin: 0px;
+  margin-bottom: 20px;
+  border-bottom-width: thin;
+  border-bottom-color: lightgray;
+  border-bottom-style: dashed;
+}
+
+img{
+  height:40px;
+  margin-right: 60px;
+}
+
+.divExchSymb{
+  align-self: flex-start;
+}
+
+.divPriceBlock{
+  display: flex;
+}
+
+.divPrice{
+  width: 150px;
+  font-size: 140%;
+}
+
+.divPriceMov{
+  display: inline-flex;
+  font-size: 140%
+}
+
+h3 {
+  align-self: center;
+  margin-left: 20px;
+}
+
+h6 {
+  margin: 0px;
+  margin-bottom: 20px;
+  font-style:italic;
+}
+
+.divFundamentals{
+  display: flex;
+}
+
+.divFundamentals1{
+  width: 50%;
+}
+
+.divFundamentals2{
+  width: 50%;
 
 }
 
-#divPriceMov{
+.divDescription{
+  margin-bottom: 45px;
+}
+
+.divStats{
+  display: flex;
+}
+
+.divStats1{
+  width: 50%px;
+}
+
+.divStats2{
+  width: 50%;
+  flex-wrap: wrap;
+}
+
+.divGraph-item{
+display: block;
+width: 600px;
+height: 800px;
 
 }
 
-#divFundamentals{
-
+.divgraphButtons{
+display: flex;
+justify-content: space-around;
+height: 150px;
 }
 
-#divFundamentals1{
-
-}
-
-#divFundamentals2{
-
-}
-
-#divDescription{
-
-}
-
-#divStats{
-
-}
-
-#divStats1{
-
-}
-
-#divStats2{
-
-}
-
-#divGraph-item{
-
-}
-
-#divgraphButtons{
-
-}
-
-#divgraph{
-  
+.divgraph{
+  margin-top: 20px;
+ width: 100%;
+ height : 200px;
+ /* height: 400px; */
 }

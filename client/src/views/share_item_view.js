@@ -24,21 +24,25 @@ ShareItemView.prototype.renderView = function (share) {
   shareItem.classList.add('divShare-item');
   this.container.appendChild(shareItem)
 
-  const shareName = document.createElement('h3');
+  const divName = document.createElement('div');
+  divName.classList.add('divName');
+  shareItem.appendChild(divName)
+
+  const shareName = document.createElement('h2');
   shareName.textContent = `${share.companyName}`;
-  shareItem.appendChild(shareName);
+  divName.appendChild(shareName);
 
   const shareLogo = document.createElement('img')
   shareLogo.src = share.logo;
   shareLogo.alt = share.companyName;
   shareLogo.classList.add("logo");
-  shareItem.appendChild(shareLogo)
+  divName.appendChild(shareLogo)
 
   const divExchSymb = document.createElement('div');
   divExchSymb.classList.add('divExchSymb');
   shareItem.appendChild(divExchSymb);
 
-  const shareExchangeSymbol = document.createElement('p');
+  const shareExchangeSymbol = document.createElement('h6');
   shareExchangeSymbol.textContent = `${share.primaryExchange} :    ${share.symbol}`;
   divExchSymb.appendChild(shareExchangeSymbol);
 
@@ -59,8 +63,18 @@ ShareItemView.prototype.renderView = function (share) {
   divPriceBlock.appendChild(divPriceMov);
 
   const sharePriceMov = document.createElement('h3');
-  sharePriceMov.textContent = `${share.change} ${Math.round(share.changePercent*10000)/100}%`;
+  sharePriceMov.textContent = `${share.change}`;
+  if (share.change<0) {
+  sharePriceMov.style.color = "red"};
   divPriceMov.appendChild(sharePriceMov);
+
+
+  const sharePriceMovPge = document.createElement('h3');
+  sharePriceMovPge.textContent = `${Math.round(share.changePercent*10000)/100}%`;
+  if (share.changePercent<0) {
+  sharePriceMovPge.style.color = "red"};
+  divPriceMov.appendChild(sharePriceMovPge);
+
 
   const divFundamentals = document.createElement('div');
   divFundamentals.classList.add('divFundamentals');
@@ -79,17 +93,17 @@ ShareItemView.prototype.renderView = function (share) {
   const shareWeek52Low = this.createDetail('52 Week Low : ',share.week52Low);
   divFundamentals1.appendChild(shareWeek52Low);
 
-  const shareLatestVolume = this.createDetail('Volume : ',share.latestVolume);
+  const shareLatestVolume = this.createDetail('Volume : ',share.latestVolume.toLocaleString());
   divFundamentals1.appendChild(shareLatestVolume);
 
-  const shareAvgTotalVolume = this.createDetail('Avg. Volume : ',share.avgTotalVolume);
+  const shareAvgTotalVolume = this.createDetail('Avg. Volume : ',share.avgTotalVolume.toLocaleString());
   divFundamentals1.appendChild(shareAvgTotalVolume);
 
   const divFundamentals2 = document.createElement('div');
-  divFundamentals2.classList.add('divFundamentals1');
+  divFundamentals2.classList.add('divFundamentals2');
   divFundamentals.appendChild(divFundamentals2);
 
-  const shareMarketCap = this.createDetail('Market Cap : ',share.marketCap);
+  const shareMarketCap = this.createDetail('Market Cap : ',share.marketCap.toLocaleString());
   divFundamentals2.appendChild(shareMarketCap);
 
   const sharePeRatio = this.createDetail('PE Ratio : ',share.peRatio);
@@ -108,7 +122,7 @@ ShareItemView.prototype.renderView = function (share) {
   divDescription.classList.add('divDescription');
   shareItem.appendChild(divDescription);
 
-  const shareDescription = document.createElement('p');
+  const shareDescription = document.createElement('h5');
   shareDescription.textContent = `${share.description}`;
   divDescription.appendChild(shareDescription);
 
@@ -159,6 +173,7 @@ ShareItemView.prototype.renderView = function (share) {
 
   const graph = document.createElement('div');
   graph.classList.add('divgraph');
+  graph.setAttribute("id","chart");
   graphItem.appendChild(graph)
 
 };
