@@ -124,6 +124,7 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
 
 // Price data for 1 year for specific share
   Shares.prototype.getChartData = function (symbol) {
+  const chartObject = {};
   const request = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`);
   request.get().then((chart) => {
     PubSub.publish('Shares:chart1y-data-ready', chart)
