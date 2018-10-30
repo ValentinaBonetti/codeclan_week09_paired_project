@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const listAllMySharesView = new ListAllMySharesView(list_all_shares);
   listAllMySharesView.bindEvents();
 
-  const individual_share = document.querySelector('div#share_item_view');
+  const individual_share = document.querySelector('div#central-container');
   const shareItemView = new ShareItemView(individual_share);
   shareItemView.bindEvents();
 

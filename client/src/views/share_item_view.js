@@ -1,4 +1,4 @@
-// const Shares = require ('./models/shares_portfolio.js');
+const Shares = require ('../models/shares_portfolio.js');
 const dateFormat = require('dateformat');
 const PubSub = require('../helpers/pub_sub.js');
 const ShareItemView = function(container) {
@@ -6,11 +6,12 @@ const ShareItemView = function(container) {
 };
 
 ShareItemView.prototype.bindEvents = function () {
-  PubSub.subscribe('Shares:api-data-ready', (event) => {
-    console.log('API data passed to ShareItemView', event.detail);
-
-    const share = event.detail
-    this.renderView(share);
+  PubSub.subscribe('SelectView:change', () => {
+    PubSub.subscribe('Shares:api-data-ready', (event) => {
+      console.log('API data passed to ShareItemView', event.detail);
+      const share = event.detail;
+      this.renderView(share);
+    })
   })
 };
 
