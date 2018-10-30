@@ -12,6 +12,7 @@ const Shares = function () {
 Shares.prototype.bindEvents = function () {
 
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
+
     const sharesItems = event.detail;
     const totalCost = this.calculatePortfolioCost(sharesItems);
 
@@ -199,8 +200,6 @@ Shares.prototype.calculateIndividualTodayGain = async function (symbol) {
   var today_share_gain = 0;
   const allSymbolInfo = await this.getIndividualApiData(symbol);
   today_share_gain = allSymbolInfo.price - allSymbolInfo.previousClose;
-  // debugger;
-  console.log('today share gain =',today_share_gain);
   return today_share_gain;
 };
 
@@ -210,9 +209,7 @@ Shares.prototype.calculateTotalTodayGain = async function (sharesItems) {
   sharesItems.forEach(async (item) => {
     let item_gain = await this.calculateIndividualTodayGain(item.symbol);
     today_total_gain += item_gain;
-    console.log('today partial total gain =',today_total_gain);
   });
-  console.log('today total gain =',today_total_gain);
   return today_total_gain;
 };
 
