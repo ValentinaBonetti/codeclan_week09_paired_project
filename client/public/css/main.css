@@ -246,3 +246,15 @@ height: 150px;
  height : 200px;
  /* height: 400px; */
 }
+
+
+
+.buyShare-item {
+  margin: 30px;
+  padding: 20px;
+}
+
+button.buy-botton {
+    height: 40px;
+    width: 80px;
+}
