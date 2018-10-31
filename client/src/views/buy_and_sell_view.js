@@ -15,7 +15,6 @@ BuyAndSellView.prototype.bindEvents = function () {
   })
 };
 
-
 BuyAndSellView.prototype.clearView = function () {
   this.container.innerHTML = '';
 };
@@ -26,8 +25,6 @@ BuyAndSellView.prototype.renderSellAShareFromPortfolio = function () {
   temporary.textContent = 'market view - sell a share from your portfolio';
   this.container.appendChild(temporary);
 };
-
-
 
 BuyAndSellView.prototype.renderBuyAShare = function (share) {
   this.clearView();
@@ -80,13 +77,11 @@ BuyAndSellView.prototype.renderBuyAShare = function (share) {
   sharePriceMov.style.color = "red"};
   divPriceMov.appendChild(sharePriceMov);
 
-
   const sharePriceMovPge = document.createElement('h3');
   sharePriceMovPge.textContent = `${Math.round(share.changePercent*10000)/100}%`;
   if (share.changePercent<0) {
   sharePriceMovPge.style.color = "red"};
   divPriceMov.appendChild(sharePriceMovPge);
-
 
   const divFundamentals = document.createElement('div');
   divFundamentals.classList.add('divFundamentals');
@@ -154,7 +149,6 @@ BuyAndSellView.prototype.renderBuyAShare = function (share) {
         mm = '0'+mm;
     }
     today = yyyy + '-' + mm + '-' + dd;
-    console.log('today is:',today);
 
     const shareToInternalDB = {};
     shareToInternalDB.symbol = share.symbol;

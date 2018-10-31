@@ -6,21 +6,39 @@ const Chart = require('./share_item_price_graph.js');
 
 const ShareItemView = function(container) {
   this.container = container;
+  this.summary_data = [];
 };
 
 ShareItemView.prototype.bindEvents = function () {
-  PubSub.subscribe('SelectView:change', () => {
-    PubSub.subscribe('Shares:api-data-ready', (event) => {
-      console.log('API data passed to ShareItemView', event.detail);
-      const share = event.detail;
-      this.renderView(share);
-      this.buyBtnClicked(share);
 
-      const chart = new Chart();
-      chart.bindEvents();
+  PubSub.subscribe('Shares:summary-data-ready',(event) => {
+    this.summary_data = event.detail;
+    console.log('Summary data is:',this.summary_data);
+  });
 
-
-    })
+  PubSub.subscribe('SelectView:change', async (event) => {
+    console.log('COMING FROM SELECT CHANGE:',event.detail);
+    const shareName = event.detail;
+    const selectedShare = this.summary_data.find(selected => selected.name === shareName);
+    const shareSymbol = selectedShare.symbol;
+    const share = new Shares();
+    // from symbol, get object from model
+    const shareObject = await share.getIndividualApiData(shareSymbol)
+    console.log('shareSymbol:',shareSymbol);
+    console.log('share OBJECT:',shareObject);
+    this.renderView(shareObject);
+    this.buyBtnClicked(shareObject);
+    const chart = new Chart();
+    chart.bindEvents();
+    // PubSub.subscribe('Shares:api-data-ready', (event) => {
+    //   // console.log('API data passed to ShareItemView', event.detail);
+    //   const share = event.detail;
+    //   this.renderView(share);
+    //   this.buyBtnClicked(share);
+    //
+    //   const chart = new Chart();
+    //   chart.bindEvents();
+    // })
   })
 };
 

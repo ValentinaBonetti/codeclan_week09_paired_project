@@ -55,6 +55,7 @@ Shares.prototype.bindEvents = function () {
 Shares.prototype.getSymbolData = function () {
   const request = new Request("https://api.iextrading.com/1.0/ref-data/symbols");
   request.get().then((summaryData) => {
+    PubSub.publish('Shares:summary-data-ready',summaryData);
     this.nameList(summaryData);
     PubSub.publish('Shares:nameList-ready', this.nameList);
 
@@ -127,7 +128,7 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
     allPortfolioData.push(itemData)
   });
   Promise.all(promises).then(() => {
-    console.log('All portfolio data:', allPortfolioData);
+    // console.log('All portfolio data:', allPortfolioData);
     PubSub.publish('SharesPortfolio:allPortfolioExtenalApiData-ready',allPortfolioData);
   });
 };
@@ -138,7 +139,7 @@ Shares.prototype.getChartData = function (symbol) {
   const request = new Request(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`);
   request.get().then((chart) => {
     PubSub.publish('Shares:chart1y-data-ready', chart)
-    console.log(chart);
+    // console.log(chart);
   });
 };
 
