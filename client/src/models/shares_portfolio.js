@@ -247,14 +247,14 @@ Shares.prototype.getAllHistoricPortfolioPrices = function (shareItems) {
 
 // The symbol of the first share of the portflio ("A") is hardcoded at line240 below - struggling to insert the object key instead - to resolve :
 Shares.prototype.prepareAllChartData = function (shareItems,price) {
-    // console.log(shareItems, price);
+    console.log(shareItems, price);
     var dayTotalGain = 0
     var chartArray2 = [["Date","Gain/(loss)"]];
     var carrierArray=[];
     for(var i = 0; i< 253; i++){
       shareItems.forEach(item => {
         dayTotalGain += (((price[item.symbol].chart[i].close)*item.n_of_shares)-(item.cost_per_share*item.n_of_shares));
-        console.log(price[item.symbol].chart[i].close,item.cost_per_share, item.n_of_shares, );
+        console.log(price[item.symbol].chart[i].close,item.cost_per_share, item.n_of_shares);
 
       });
       carrierArray.push(new Date(price.A.chart[i].date));
