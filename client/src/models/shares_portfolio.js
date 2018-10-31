@@ -15,6 +15,7 @@ Shares.prototype.bindEvents = function () {
     const totalCost = this.calculatePortfolioCost(sharesItems);
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
     this.getLivePortfolioPrices(sharesItems);
+    this.getAllLivePortfolioPrices(sharesItems);
     PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
       const livePrices = event.detail;
       const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
@@ -118,7 +119,7 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
     allPortfolioData.push(itemData)
   });
   Promise.all(promises).then(() => {
-    console.log('All portfolio data:', allPortfolioData);
+    // console.log('All portfolio data:', allPortfolioData);
     PubSub.publish('SharesPortfolio:allPortfolioExtenalApiData-ready',allPortfolioData);
   });
 };
@@ -133,8 +134,8 @@ Shares.prototype.collectAllPortfolioExtenalApiData = function (sharesItems) {
 };
 
 Shares.prototype.prepareChartData = function (chart_objects) {
-console.log(chart_objects);
-  var chartArray = [["Date","Price"]];
+// console.log(chart_objects);
+  var chartArray = [["Date",""]];
   var carrierArray=[];
   chart_objects.forEach((item) => {
     carrierArray.push(new Date(item.date));
@@ -143,7 +144,7 @@ console.log(chart_objects);
     carrierArray=[];
   });
   PubSub.publish('Shares:chart1y-data-ready', chartArray)
-  console.log("1yr data", chartArray);
+  // console.log("1yr data", chartArray);
 };
 
 // INTERNAL API
@@ -163,6 +164,7 @@ Shares.prototype.calculatePortfolioCost = function (sharesItems) {
     sharesItems.forEach((item) => {
       total_cost += item.n_of_shares*item.cost_per_share;
     });
+    PubSub.publish('SharesPortfolio:Portfolio-cost-list-ready', total_cost);
     return total_cost;
 };
 
@@ -180,6 +182,7 @@ Shares.prototype.getLivePortfolioPrices = function (sharesItems) {
 
 // Calculate current value from live price data
 Shares.prototype.calculateCurrentPortfolioValue = function (sharesItems,livePrices) {
+  // console.log(livePrices);
   var total_value = 0;
   sharesItems.forEach((item) => {
     total_value += item.n_of_shares*livePrices[item.symbol].price;
@@ -209,5 +212,38 @@ Shares.prototype.calculateTotalTodayGain = async function (sharesItems) {
   return today_total_gain;
 };
 
+
+// 1 year price data for all shares in Internal API portfolio
+Shares.prototype.getAllLivePortfolioPrices = function (shareItems) {
+  var allShares = "";
+  shareItems.forEach((item) => {
+    allShares += item.symbol+",";
+    // console.log(shareItems);
+  });
+  const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${allShares}&types=chart&range=1y`);
+  request.get().then((price) => {
+      this.prepareAllChartData(shareItems,price);
+      // console.log(price);
+  });
+};
+
+// The symbol of the first share of the portflio ("A") is hardcoded at line240 below - struggling to insert the object key instead - to resolve :
+Shares.prototype.prepareAllChartData = function (shareItems,price) {
+    // console.log(shareItems);
+    var dayTotal = 0
+    var chartArray2 = [["Date","Gain/(loss)"]];
+    var carrierArray=[];
+    for(var i = 0; i< 257; i++){
+      shareItems.forEach(item => {
+        dayTotalGain =+ (((price[item.symbol].chart[i].close)-(item.cost_per_share))*item.n_of_shares);
+      });
+      carrierArray.push(new Date(price.A.chart[i].date));
+      carrierArray.push(parseFloat(dayTotalGain));
+      chartArray2.push(carrierArray)
+      carrierArray=[];
+    };
+    PubSub.publish('SharesPortfolio:chart-gain-data-ready', chartArray2);
+    console.log("SH", chartArray2);
+};
 
 module.exports = Shares;

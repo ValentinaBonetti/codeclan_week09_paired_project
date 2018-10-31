@@ -187,6 +187,7 @@ ShareItemView.prototype.renderView = function (share) {
 
   const btnSell = document.createElement("button");
   const textSell = document.createTextNode("SELL");
+  btnSell.setAttribute("id","sell-button");
   btnSell.appendChild(textSell);
   graphButtons.appendChild(btnSell);
 

@@ -18,4 +18,6 @@ DashboardView.prototype.renderDashboard = function () {
   this.element.appendChild(test);
 };
 
+
+
 module.exports = DashboardView;
