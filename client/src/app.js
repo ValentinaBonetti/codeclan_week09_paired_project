@@ -9,6 +9,8 @@ const BuyAndSellView = require('./views/buy_and_sell_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  event.preventDefault();
+  
   const nav_bar = document.querySelector('#nav-bar');
   const navView = new NavView(nav_bar);
   navView.bindEvents();

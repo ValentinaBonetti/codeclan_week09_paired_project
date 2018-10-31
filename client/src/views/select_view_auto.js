@@ -112,6 +112,7 @@ SelectViewAuto.prototype.autocomplete = function (arr) {
 
   const handleFormSubmit = function(event) {
     event.preventDefault();
+    console.log('PUBLISHED ON SELECTVIEW:CHANGE',event.target.selectedShare.value);
     PubSub.publish('SelectView:change', event.target.selectedShare.value);
     submitForm.reset();
   };
