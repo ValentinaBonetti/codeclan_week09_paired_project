@@ -17,7 +17,7 @@ DashboardView.prototype.bindEvents = function () {
 DashboardView.prototype.renderDashboard = function () {
   this.element.innerHTML='';
   const test = document.createElement('h1');
-  test.textContent = 'Dashboard';
+  test.textContent = '';
   this.element.appendChild(test);
 
   const startItems = document.createElement('div');
@@ -36,12 +36,12 @@ DashboardView.prototype.renderDashboard = function () {
   const assetGraph = document.createElement('div');
   assetGraph.classList.add('divAssetGraph');
   assetGraph.setAttribute("id","AssetChart");
-  startItems.appendChild(assetGraph)
+  gainGraph.appendChild(assetGraph)
 
   const dayGraph = document.createElement('div');
   dayGraph.classList.add('divDayGraph');
   dayGraph.setAttribute("id","dayChart");
-  startItems.appendChild(dayGraph)
+  gainGraph.appendChild(dayGraph)
 
 
   PubSub.subscribe('SharesPortfolio:chart-gain-data-ready', (event) => {

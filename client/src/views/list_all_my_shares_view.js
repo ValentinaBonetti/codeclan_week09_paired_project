@@ -43,16 +43,16 @@ ListAllMySharesView.prototype.selectTableFields = function (sharesItemsArray,sha
   sharesItemsArray.forEach(function(localItem) {
     // add what you want to show in table view:
     var refinedItem = {};
-    refinedItem.name = localItem.name;
-    refinedItem.symbol = localItem.symbol.toUpperCase();
+    refinedItem.Name = localItem.name;
+    refinedItem.Symbol = localItem.symbol.toUpperCase();
     // refinedItem.currency = localItem.currency;
-    refinedItem.number = localItem.n_of_shares;
-    refinedItem['purchase price'] = localItem.cost_per_share;
+    refinedItem.Number = localItem.n_of_shares;
+    refinedItem['Purchase price'] = localItem.cost_per_share;
     // refinedItem.cost = Math.round(localItem.cost_per_share*localItem.n_of_shares);
     var found = sharesItemsExtenalInfoArray.find((share) => share.symbol === localItem.symbol);
-    refinedItem['current price'] = found.price;
-    refinedItem['value'] = Math.round(found.price*localItem.n_of_shares);
-    refinedItem['gain/(loss)'] = Math.round(found.price*localItem.n_of_shares-(localItem.cost_per_share*localItem.n_of_shares));
+    refinedItem['Current price'] = found.price;
+    refinedItem['Value'] = Math.round(found.price*localItem.n_of_shares);
+    refinedItem['Gain/(loss)'] = Math.round(found.price*localItem.n_of_shares-(localItem.cost_per_share*localItem.n_of_shares));
     // Unsuccessful attempt to put a sell button in the last column:
     // var sellButton = document.createElement('button');
     // sellButton.id = refinedItem.symbol;

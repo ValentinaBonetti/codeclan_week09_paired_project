@@ -10,7 +10,7 @@ BuyAndSellView.prototype.bindEvents = function () {
   // get internal db with ids
   PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
     this.myPortfolioItems = event.detail;
-    console.log('HEREEEEE',this.myPortfolioItems);
+    // console.log('HEREEEEE',this.myPortfolioItems);
   })
 
   PubSub.subscribe('NavView:market-button-clicked', () => {

@@ -11,7 +11,7 @@ SummaryView.prototype.bindEvents = function () {
 
     const totalCost = event.detail;
     const key = 'cost';
-    const string = 'total cost: ';
+    const string = 'Portfolio cost: $';
     this.render(key,string,totalCost);
 
     // const totalValueHeader = document.createElement('h4');
@@ -23,7 +23,7 @@ SummaryView.prototype.bindEvents = function () {
 
     const currentTotalValue = event.detail;
     const key = 'value';
-    const string = 'total current value: ';
+    const string = 'Portfolio value: $';
     this.render(key,string,currentTotalValue);
 
     // const currentTotalValueHeader = document.createElement('h4');
@@ -35,7 +35,7 @@ SummaryView.prototype.bindEvents = function () {
 
     const todayTotalGain = event.detail;
     const key = 'gain';
-    const string = 'todays gains: ';
+    const string = 'Gain/(loss) today: $';
     this.render(key,string,todayTotalGain);
 
     // const todayTotalGainHeader = document.createElement('h4');
