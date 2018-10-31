@@ -6,41 +6,46 @@ db.shares.insertMany([
     symbol: 'A',
     name: 'Agilent Technologies Inc.',
     n_of_shares: 10,
-    cost_per_share: 100,
+    cost_per_share: 60,
     date_of_purchase: '2018-10-09',
-    currency: 'USD'
+    currency: 'USD',
+    sector: 'Healthcare'
   },
   {
     symbol: 'AAL',
     name: 'American Airlines Group Inc.',
     n_of_shares: 1,
-    cost_per_share: 120,
+    cost_per_share: 30,
     date_of_purchase: '2018-05-08',
-    currency: 'USD'
+    currency: 'USD',
+    sector: 'Industrials'
   },
   {
     symbol: 'AAPL',
     name: 'Apple Inc.',
     n_of_shares: 20,
-    cost_per_share: 240,
+    cost_per_share: 200,
     date_of_purchase: '2018-08-13',
-    currency: 'USD'
+    currency: 'USD',
+    sector: 'Technology'
   },
   {
     symbol: 'GHL',
     name: 'Greenhill & Co. Inc.',
     n_of_shares: 200,
-    cost_per_share: 21.345,
+    cost_per_share: 21,
     date_of_purchase: '2018-01-02',
-    currency: 'USD'
+    currency: 'USD',
+    sector: 'Financial Services'
   },
   {
     symbol: 'TLF',
     name: 'Tandy Leather Factory Inc.',
     n_of_shares: 1,
-    cost_per_share: 10.6,
+    cost_per_share: 5,
     date_of_purchase: '2018-01-19',
-    currency: 'USD'
+    currency: 'USD',
+    sector: 'Consumer Cyclical'
   }
   // {
   //   name: 'Cash',

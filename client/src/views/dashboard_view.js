@@ -1,5 +1,7 @@
+const Shares = require ('../models/shares_portfolio.js');
 const PubSub = require('../helpers/pub_sub.js');
 const Chart = require('./share_item_price_graph.js');
+const Chart2 = require('./dashboard_view_graph.js');
 
 const DashboardView = function (element) {
   this.element = element;
@@ -15,7 +17,7 @@ DashboardView.prototype.bindEvents = function () {
 DashboardView.prototype.renderDashboard = function () {
   this.element.innerHTML='';
   const test = document.createElement('h1');
-  test.textContent = 'dashboard view';
+  test.textContent = 'Dashboard';
   this.element.appendChild(test);
 
   const startItems = document.createElement('div');
@@ -31,9 +33,20 @@ DashboardView.prototype.renderDashboard = function () {
   // sHtest.textContent = "sHtest";
   // startItems.appendChild(sHtest);
 
+  const assetGraph = document.createElement('div');
+  assetGraph.classList.add('divAssetGraph');
+  assetGraph.setAttribute("id","AssetChart");
+  startItems.appendChild(assetGraph)
+
+  const dayGraph = document.createElement('div');
+  dayGraph.classList.add('divDayGraph');
+  dayGraph.setAttribute("id","dayChart");
+  startItems.appendChild(dayGraph)
+
+
   PubSub.subscribe('SharesPortfolio:chart-gain-data-ready', (event) => {
     console.log("SH" ,event.detail);
-    const gainChart = new Chart(event.detail);
+    const gainChart = new Chart2(event.detail);
     gainChart.bindEvents();
 });
 

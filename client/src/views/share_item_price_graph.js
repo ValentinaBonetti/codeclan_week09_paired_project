@@ -17,9 +17,6 @@ Chart.prototype.drawChart = function(){
   var chart = new google.visualization.LineChart(document.getElementById('chart'));
   chart.draw(data, options);
 
-  var gainChart = new google.visualization.LineChart(document.getElementById('gainChart'));
-  gainChart.draw(data, options);
-
 };
 
 Chart.prototype.bindEvents = function () {

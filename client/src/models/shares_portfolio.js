@@ -15,7 +15,8 @@ Shares.prototype.bindEvents = function () {
     const totalCost = this.calculatePortfolioCost(sharesItems);
     PubSub.publish('SharesPortfolio:total-cost-ready',totalCost);
     this.getLivePortfolioPrices(sharesItems);
-    this.getAllLivePortfolioPrices(sharesItems);
+    this.getAllHistoricPortfolioPrices(sharesItems);
+    // this.assetMix(sharesItems);
     PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
       const livePrices = event.detail;
       const currentTotalValue = this.calculateCurrentPortfolioValue(sharesItems,livePrices);
@@ -39,7 +40,7 @@ Shares.prototype.bindEvents = function () {
 };
 
 // Gets symbol data from API for all shares (an array for all shares
-// containing 8,750 hashes with keys - symbol:, name:, etc).
+// containing 8,750 objects with keys - symbol:, name:, etc).
 // Subscribes for change in share name drop-down and returns selected share name.
 // Finds share symbol based on selected share name, calls getAPIData and
 // getChartData functions and passes the selected share symbol.
@@ -182,7 +183,7 @@ Shares.prototype.getLivePortfolioPrices = function (sharesItems) {
 
 // Calculate current value from live price data
 Shares.prototype.calculateCurrentPortfolioValue = function (sharesItems,livePrices) {
-  // console.log(livePrices);
+  console.log(livePrices,sharesItems);
   var total_value = 0;
   sharesItems.forEach((item) => {
     total_value += item.n_of_shares*livePrices[item.symbol].price;
@@ -214,36 +215,64 @@ Shares.prototype.calculateTotalTodayGain = async function (sharesItems) {
 
 
 // 1 year price data for all shares in Internal API portfolio
-Shares.prototype.getAllLivePortfolioPrices = function (shareItems) {
+Shares.prototype.getAllHistoricPortfolioPrices = function (shareItems) {
   var allShares = "";
   shareItems.forEach((item) => {
     allShares += item.symbol+",";
-    // console.log(shareItems);
+    console.log(shareItems);
   });
   const request = new Request(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${allShares}&types=chart&range=1y`);
   request.get().then((price) => {
       this.prepareAllChartData(shareItems,price);
-      // console.log(price);
+      console.log('HERE',price);
   });
 };
 
 // The symbol of the first share of the portflio ("A") is hardcoded at line240 below - struggling to insert the object key instead - to resolve :
 Shares.prototype.prepareAllChartData = function (shareItems,price) {
-    // console.log(shareItems);
-    var dayTotal = 0
+    // console.log(shareItems, price);
+    var dayTotalGain = 0
     var chartArray2 = [["Date","Gain/(loss)"]];
     var carrierArray=[];
-    for(var i = 0; i< 257; i++){
+    for(var i = 0; i< 253; i++){
       shareItems.forEach(item => {
-        dayTotalGain =+ (((price[item.symbol].chart[i].close)-(item.cost_per_share))*item.n_of_shares);
+        dayTotalGain += (((price[item.symbol].chart[i].close)*item.n_of_shares)-(item.cost_per_share*item.n_of_shares));
+        console.log(price[item.symbol].chart[i].close,item.cost_per_share, item.n_of_shares, );
+
       });
       carrierArray.push(new Date(price.A.chart[i].date));
       carrierArray.push(parseFloat(dayTotalGain));
       chartArray2.push(carrierArray)
       carrierArray=[];
+      var dayTotalGain = 0
     };
     PubSub.publish('SharesPortfolio:chart-gain-data-ready', chartArray2);
-    console.log("SH", chartArray2);
+    console.log(chartArray2);
 };
+
+// Shares.prototype.assetMix = function (shareItems) {
+//   PubSub.subscribe('SharesPortfolio:live-prices-ready', (event) => {
+//   const livePrices = event.detail;
+//     console.log(shareItems, livePrices);
+//   shareItems.forEach((item) => {
+//     item.price = livePrices[item.symbol].price
+//   });
+//
+//   //
+//   // const unique = (value, index, ) => {
+//   //       return self.indexOf(value) === index;
+//   //   }
+//   //   return (this.getModesOfTransport().filter(unique));
+//   //
+//   //
+//   });
+//
+//   console.log(shareItems);
+//
+//
+//
+// // });
+// };
+
 
 module.exports = Shares;
