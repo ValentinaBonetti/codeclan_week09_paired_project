@@ -198,15 +198,15 @@ ShareItemView.prototype.renderView = function (share) {
   graphItem.appendChild(graphButtons)
 
   const btnBuy = document.createElement("button");
-  const textBuy = document.createTextNode("BUY");
+  const textBuy = document.createTextNode("BUY and SELL");
   btnBuy.setAttribute("id","buy-button");
   btnBuy.appendChild(textBuy);
   graphButtons.appendChild(btnBuy);
 
-  const btnSell = document.createElement("button");
-  const textSell = document.createTextNode("SELL");
-  btnSell.appendChild(textSell);
-  graphButtons.appendChild(btnSell);
+  // const btnSell = document.createElement("button");
+  // const textSell = document.createTextNode("SELL");
+  // btnSell.appendChild(textSell);
+  // graphButtons.appendChild(btnSell);
 
   const graph = document.createElement('div');
   graph.classList.add('divgraph');

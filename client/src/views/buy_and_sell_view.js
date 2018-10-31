@@ -3,9 +3,16 @@ const dateFormat = require('dateformat');
 
 const BuyAndSellView = function (container) {
   this.container = container;
+  this.myPortfolioItems = [];
 }
 
 BuyAndSellView.prototype.bindEvents = function () {
+  // get internal db with ids
+  PubSub.subscribe('SharesPortfolio:internal-api-list-ready', (event) => {
+    this.myPortfolioItems = event.detail;
+    console.log('HEREEEEE',this.myPortfolioItems);
+  })
+
   PubSub.subscribe('NavView:market-button-clicked', () => {
     this.renderSellAShareFromPortfolio();
   })
@@ -113,10 +120,12 @@ BuyAndSellView.prototype.renderBuyAShare = function (share) {
   const priceToSales = this.createDetail('Price to sales : ',share.priceToSales);
   divFundamentals2.appendChild(priceToSales);
 
+/////////////////// buy //////////////////////
+
   const buyItem = document.createElement('div');
   buyItem.classList.add('divGraph-item');
+  buyItem.id = 'buy-form-container'
   this.container.appendChild(buyItem)
-
 
   const buy_form = document.createElement('form');
   buy_form.id = "put-new-share-into-portfolio";
@@ -160,6 +169,49 @@ BuyAndSellView.prototype.renderBuyAShare = function (share) {
 
     PubSub.publish('BuyAndSellView:put-share-in-internal-db',shareToInternalDB);
   });
+
+////////////// end of buy //////////////////////
+
+
+
+/////////////////// sell //////////////////////
+
+  const sellItem = document.createElement('div');
+  sellItem.classList.add('divGraph-item');
+  sellItem.id = 'sell-form-container'
+  this.container.appendChild(sellItem)
+
+  const sell_form = document.createElement('form');
+  sell_form.id = "delete-share-from-portfolio";
+  const quantity_label_sell = document.createElement('label');
+  quantity_label_sell.for = "number-field";
+  quantity_label_sell.textContent = 'quantity';
+  sell_form.appendChild(quantity_label_sell);
+  const quantity_input_sell = document.createElement('input');
+  quantity_input_sell.type = "number";
+  quantity_input_sell.id = "number-field-sell";
+  sell_form.appendChild(quantity_input_sell);
+  const sell_form_button = document.createElement('button');
+  sell_form_button.type = "submit";
+  sell_form_button.textContent = "SELL";
+  sell_form.appendChild(sell_form_button);
+  sellItem.appendChild(sell_form);
+
+  sell_form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const shareToSellFromInternalDB = {};
+    console.log('FROM INSIDE:',this.myPortfolioItems);
+    // const selectedeShare = this.myPortfolioItems.find(selected => selected.symbol === share.symbol);
+    // shareToSellFromInternalDB._id = selectedeShare._id;
+    shareToSellFromInternalDB.n_of_shares = event.target['number-field-sell'].value;
+
+    console.log('UPDATE THIS:',shareToSellFromInternalDB);
+    PubSub.publish('BuyAndSellView:sell-share-from-internal-db',shareToSellFromInternalDB);
+  });
+
+////////////// end of sell //////////////////////
+
 
 };
 
